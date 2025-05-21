@@ -17,4 +17,4 @@ RUN ./mvnw clean package -DskipTests
 EXPOSE 8080
 
 # Comando para ejecutar el JAR
-CMD ["java", "-jar", "target/CITASalud.jar"]
+CMD ["java", "-jar", "target/CITASalud_Backend.jar"]
