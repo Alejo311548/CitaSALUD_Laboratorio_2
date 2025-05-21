@@ -13,7 +13,7 @@ RUN chmod +x mvnw
 # Compila la app sin tests
 RUN ./mvnw clean package -DskipTests
 
-# Expone el puerto 
+# Expone el puerto
 EXPOSE 8080
 
 # Comando para ejecutar el JAR
