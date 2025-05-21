@@ -1,17 +1,10 @@
 package com.eps.citas.service;
 
+import com.eps.citas.dto.CancelarCitaDto;
 import com.eps.citas.dto.CrearCitaDto;
 import com.eps.citas.dto.SlotDisponibleDto;
-import com.eps.citas.model.Cita;
-import com.eps.citas.model.DisponibilidadProfesional;
-import com.eps.citas.model.Profesional;
-import com.eps.citas.model.Sede;
-import com.eps.citas.model.Usuario;
-import com.eps.citas.repository.CitaRepository;
-import com.eps.citas.repository.DisponibilidadRepository;
-import com.eps.citas.repository.UsuarioRepository;
-import com.eps.citas.repository.ProfesionalRepository;
-import com.eps.citas.repository.SedeRepository;
+import com.eps.citas.model.*;
+import com.eps.citas.repository.*;
 
 import org.springframework.stereotype.Service;
 
@@ -31,16 +24,20 @@ public class CitaService {
     private final UsuarioRepository usuarioRepository;
     private final SedeRepository sedeRepository;
 
+    private final MotivoCancelacionRepository motivoCancelacionRepository;
+
     public CitaService(CitaRepository citaRepository,
                        ProfesionalRepository profesionalRepository,
                        DisponibilidadRepository disponibilidadRepository,
                        UsuarioRepository usuarioRepository,
-                       SedeRepository sedeRepository) {
+                       SedeRepository sedeRepository,
+                       MotivoCancelacionRepository motivoCancelacionRepository) {
         this.citaRepository = citaRepository;
         this.profesionalRepository = profesionalRepository;
         this.disponibilidadRepository = disponibilidadRepository;
         this.usuarioRepository = usuarioRepository;
         this.sedeRepository = sedeRepository;
+        this.motivoCancelacionRepository = motivoCancelacionRepository;
     }
 
     public List<SlotDisponibleDto> obtenerDisponibilidad(Long profesionalId, LocalDate fecha) {
@@ -97,5 +94,35 @@ public class CitaService {
         Usuario usuario = usuarioRepository.findByEmail(emailUsuario)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
         return citaRepository.findByUsuario_UsuarioId(usuario.getUsuarioId());
+    }
+
+    public void cancelarCita(Long citaId, String emailUsuario, CancelarCitaDto cancelarDto) {
+        Cita cita = citaRepository.findById(citaId)
+                .orElseThrow(() -> new IllegalArgumentException("Cita no encontrada"));
+
+        Usuario usuario = usuarioRepository.findByEmail(emailUsuario)
+                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
+
+        // Validar que la cita pertenezca al usuario que la quiere cancelar
+        if (!cita.getUsuario().getUsuarioId().equals(usuario.getUsuarioId())) {
+            throw new IllegalArgumentException("No tienes permiso para cancelar esta cita");
+        }
+
+        // Cambiar estado a CANCELADA
+        cita.setEstado("CANCELADA");
+
+        // Guardar motivoCancelacion (texto libre)
+        if (cancelarDto.getMotivoCancelacion() != null && !cancelarDto.getMotivoCancelacion().isBlank()) {
+            cita.setMotivoCancelacion(cancelarDto.getMotivoCancelacion());
+        }
+
+        // Si se pasa motivoId, buscar y asignar
+        if (cancelarDto.getMotivoId() != null) {
+            MotivoCancelacion motivo = motivoCancelacionRepository.findById(cancelarDto.getMotivoId())
+                    .orElseThrow(() -> new IllegalArgumentException("Motivo de cancelación no encontrado"));
+            cita.setMotivo(motivo);
+        }
+
+        citaRepository.save(cita);
     }
 }

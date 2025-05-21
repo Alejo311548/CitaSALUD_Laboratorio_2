@@ -3,6 +3,7 @@ package com.eps.citas.auth.util;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
@@ -34,19 +35,28 @@ public class JwtTokenUtil {
                 .setSubject(email)
                 .setIssuedAt(now)
                 .setExpiration(expiry)
-                .signWith(signingKey)   // HS256 detectado automáticamente
+                .signWith(signingKey, SignatureAlgorithm.HS256)
                 .compact();
     }
 
     /** Extrae el campo 'subject' (el email) del token */
     public String extractUsername(String token) {
-        return parseClaims(token).getSubject();
+        try {
+            Claims claims = parseClaims(token);
+            System.out.println("Claims extraídos: " + claims);
+            return claims.getSubject();
+        } catch (Exception e) {
+            System.out.println("Error al extraer username: " + e.getMessage());
+            return null;
+        }
     }
+
+
 
     /** Valida firma y expiración */
     public boolean validateToken(String token) {
         try {
-            Jws<Claims> jws = Jwts.parser()
+            Jws<Claims> jws = Jwts.parserBuilder()
                     .setSigningKey(signingKey)
                     .build()
                     .parseClaimsJws(token);
@@ -58,7 +68,7 @@ public class JwtTokenUtil {
 
     /** Parsea y verifica la firma, devolviendo los Claims */
     private Claims parseClaims(String token) {
-        Jws<Claims> jws = Jwts.parser()
+        Jws<Claims> jws = Jwts.parserBuilder()
                 .setSigningKey(signingKey)
                 .build()
                 .parseClaimsJws(token);

@@ -1,5 +1,6 @@
 package com.eps.citas.controller;
 
+import com.eps.citas.dto.CancelarCitaDto;
 import com.eps.citas.dto.CrearCitaDto;
 import com.eps.citas.dto.SlotDisponibleDto;
 import com.eps.citas.model.Cita;
@@ -50,5 +51,25 @@ public class CitaController {
         }
         List<Cita> citas = citaService.obtenerCitasPorUsuario(principal.getName());
         return ResponseEntity.ok(citas);
+    }
+
+    @PutMapping("/{id}/cancelar")
+    public ResponseEntity<?> cancelarCita(
+            @PathVariable Long id,
+            @RequestBody CancelarCitaDto cancelarDto,
+            Principal principal) {
+
+        if (principal == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuario no autenticado");
+        }
+
+        try {
+            citaService.cancelarCita(id, principal.getName(), cancelarDto);
+            return ResponseEntity.ok("Cita cancelada correctamente");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al cancelar la cita");
+        }
     }
 }

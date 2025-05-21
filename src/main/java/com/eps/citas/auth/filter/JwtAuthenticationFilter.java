@@ -34,7 +34,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         // Rutas que se deben excluir del filtro
         if (path.startsWith("/api/auth/")
-                || path.startsWith("/api/citas/")
                 || path.startsWith("/api/especialidades/")
                 || path.startsWith("/api/sedes/")
                 || path.startsWith("/api/profesionales/")) {
@@ -53,21 +52,29 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             username = jwtTokenUtil.extractUsername(token);
         }
 
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+        System.out.println("Token recibido: " + token);
+
+        if (username != null) {
+            System.out.println("Username extraído del token: " + username);
+
             var userDetails = userDetailsService.loadUserByUsername(username);
+            System.out.println("UserDetails: " + userDetails);
 
             if (jwtTokenUtil.validateToken(token)) {
+                System.out.println("Token válido");
+
                 UsernamePasswordAuthenticationToken authToken =
                         new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);
+            } else {
+                System.out.println("Token inválido");
             }
+        } else {
+            System.out.println("No se extrajo username o ya está autenticado");
         }
 
         filterChain.doFilter(request, response);
     }
-
-
 }
-

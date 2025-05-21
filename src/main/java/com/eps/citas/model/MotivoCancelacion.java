@@ -9,15 +9,31 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "motivos_cancelacion")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class MotivoCancelacion {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long motivoId;
+    private Long id;
 
+    @Column(nullable = false)
     private String descripcion;
+
+    // Getters y setters
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
 }
+
 
