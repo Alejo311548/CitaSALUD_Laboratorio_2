@@ -38,7 +38,7 @@ public class Usuario {
         this.estado = estado;
     }
 
-    // Getters y Setters
+    // Getters y Setters. No me está funcionando lombok
     public Long getUsuarioId() {
         return usuarioId;
     }

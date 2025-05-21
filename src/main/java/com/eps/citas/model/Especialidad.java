@@ -22,7 +22,7 @@ public class Especialidad {
         this.nombre = nombre;
     }
 
-    // Constructor solo con ID (como tenías)
+    // Constructor solo con ID. Debo revisar los constructores
     public Especialidad(Long especialidadId) {
         this.especialidadId = especialidadId;
     }

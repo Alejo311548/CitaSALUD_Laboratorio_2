@@ -111,7 +111,7 @@ public class CitaService {
         // Cambiar estado a CANCELADA
         cita.setEstado("CANCELADA");
 
-        // Guardar motivoCancelacion (texto libre)
+        // Guardar motivoCancelacion. Revisar después si pongo texto libre o predeterminados
         if (cancelarDto.getMotivoCancelacion() != null && !cancelarDto.getMotivoCancelacion().isBlank()) {
             cita.setMotivoCancelacion(cancelarDto.getMotivoCancelacion());
         }
