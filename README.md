@@ -28,9 +28,38 @@ Este proyecto es un backend desarrollado en Java con Spring Boot que expone una 
 
 ---
 
-## Cómo consumir la API
 
-No es necesario clonar el repositorio ni ejecutar nada localmente para probar la API. Simplemente realiza peticiones HTTP a los endpoints disponibles.
+## Ejecutar la API localmente con Docker
+
+1. Clone el repositorio:
+
+```bash
+git clone <[URL-del-repositorio](https://github.com/Alejo311548/CitaSALUD_Laboratorio_2)>
+cd <CitaSALUD_Laboratorio_2>
+
+2. Construya la imagen Docker desde el Dockerfile ubicado en la raíz del proyecto:
+
+```bash
+docker build -t citasalud-backend .
+
+3. Ejecute el contenedor
+ 
+```bash
+docker run -d -p 8080:8080 --name citasalud-backend alejo311548/citasalud-backend
+
+4. Verifique que el contenedor esté corriendo
+```bash
+docker ps
+
+5. Realice los llamados a los diferentes endpoints
+```bash
+http://localhost:8080/api/especialidades
+http://localhost:8080/api/sedes
+http://localhost:8080/api/auth/login
+http://localhost:8080/api/auth/register
+
+
+
 
 ### Cuándo y cómo probar cada endpoint
 
