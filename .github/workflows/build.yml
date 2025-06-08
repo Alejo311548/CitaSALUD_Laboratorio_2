@@ -95,13 +95,7 @@ jobs:
           ls -la mvnw
           ls -la pom.xml
 
-      - name: Move build files to root
-        run: |
-          cp target/CITASalud_Backend.jar ./CITASalud_Backend.jar
-          cp target/Dockerfile ./Dockerfile
-          cp target/mvnw ./mvnw
-          cp target/pom.xml ./pom.xml
-
+   
 
       - name: Upload app files to EC2
         uses: appleboy/scp-action@v0.1.4
@@ -110,7 +104,7 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_KEY }}
           source: |
-            CITASalud_Backend.jar
+            target/CITASalud_Backend.jar
             Dockerfile
             mvnw
             .mvn
