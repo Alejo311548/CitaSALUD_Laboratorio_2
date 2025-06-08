@@ -40,6 +40,12 @@ jobs:
           name: jacoco-report
           path: target/site/jacoco
 
+      - name: Upload JAR artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: jar-file
+          path: target/*.jar
+
       - name: SonarCloud Scan
         run: mvn verify sonar:sonar -Dsonar.projectKey=Alejo311548_CitaSALUD_Laboratorio_2 -Dsonar.organization=alejo311548 -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ secrets.SONAR_TOKEN }}
 
@@ -59,13 +65,18 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
+      - name: Download JAR artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: jar-file
+
       - name: Upload JAR to EC2
         uses: appleboy/scp-action@v0.1.4
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_KEY }}
-          source: "target/*.jar"
+          source: "*.jar"
           target: "/home/ubuntu/app"
 
       - name: SSH into EC2 and deploy Docker container
