@@ -71,7 +71,7 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_KEY }}
-          source: "target/*.jar Dockerfile mvnw .mvn src pom.xml"
+          source: "target/CITASalud_Backend.jar Dockerfile mvnw .mvn src pom.xml"
           target: "/home/ubuntu/app"
 
       - name: SSH into EC2 and deploy Docker container
