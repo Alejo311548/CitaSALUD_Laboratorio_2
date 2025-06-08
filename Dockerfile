@@ -1,20 +1,32 @@
-# Usa una imagen con JDK 17
-FROM eclipse-temurin:17-jdk
+# Usa una imagen base con JDK 17
+FROM eclipse-temurin:17-jdk AS build
 
-# Crea un directorio de trabajo
+# Establece el directorio de trabajo para la construcción
 WORKDIR /app
 
-# Copia todo el código fuente
-COPY . .
+# Copia los archivos necesarios para compilar el proyecto
+COPY .mvn .mvn
+COPY mvnw mvnw
+COPY pom.xml pom.xml
+COPY src src
 
 # Da permisos de ejecución al wrapper
 RUN chmod +x mvnw
 
-# Compila la app sin tests
+# Construye el proyecto (sin tests)
 RUN ./mvnw clean package -DskipTests
+
+# Etapa final: solo contiene el .jar
+FROM eclipse-temurin:17-jdk
+
+# Establece el directorio de trabajo para ejecución
+WORKDIR /app
+
+# Copia el jar desde la etapa anterior
+COPY --from=build /app/target/CITASalud_Backend.jar .
 
 # Expone el puerto
 EXPOSE 8080
 
 # Comando para ejecutar el JAR
-CMD ["java", "-jar", "target/CITASalud_Backend.jar"]
+CMD ["java", "-jar", "CITASalud_Backend.jar"]
