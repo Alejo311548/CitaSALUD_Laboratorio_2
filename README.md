@@ -1,4 +1,4 @@
-# Proyecto Backend de Gestión de Especialidades y Sedes
+# Entorno CI/CD para módulo de agendamiento de citas (EV07-Feature2)
 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Alejo311548_CitaSALUD_Laboratorio_2&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=Alejo311548_CitaSALUD_Laboratorio_2)
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=Alejo311548_CitaSALUD_Laboratorio_2&metric=bugs)](https://sonarcloud.io/summary/new_code?id=Alejo311548_CitaSALUD_Laboratorio_2)
