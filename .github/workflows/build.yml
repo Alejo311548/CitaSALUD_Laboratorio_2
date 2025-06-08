@@ -46,6 +46,17 @@ jobs:
           name: jar-file
           path: target/*.jar
 
+      - name: Upload Docker and build files
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-files
+          path: |
+            Dockerfile
+            mvnw
+            .mvn
+            src
+            pom.xml
+
       - name: SonarCloud Scan
         run: mvn verify sonar:sonar -Dsonar.projectKey=Alejo311548_CitaSALUD_Laboratorio_2 -Dsonar.organization=alejo311548 -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ secrets.SONAR_TOKEN }}
 
@@ -62,12 +73,27 @@ jobs:
     needs: build
 
     steps:
-      - name: Checkout repo
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Check files before upload
-        run: ls -la target
+      - name: Download jar artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: jar-file
+          path: ./target
 
+      - name: Download build files artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: build-files
+          path: ./
+
+      - name: List files to verify
+        run: |
+          ls -la target
+          ls -la Dockerfile
+          ls -la mvnw
+          ls -la pom.xml
 
       - name: Upload app files to EC2
         uses: appleboy/scp-action@v0.1.4
@@ -75,8 +101,14 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_KEY }}
-          source: "target/CITASalud_Backend.jar Dockerfile mvnw .mvn src pom.xml"
-          target: "/home/ubuntu/app"
+          source: |
+            target/*.jar
+            Dockerfile
+            mvnw
+            .mvn
+            src
+            pom.xml
+          target: /home/ubuntu/app
 
       - name: SSH into EC2 and deploy Docker container
         uses: appleboy/ssh-action@v0.1.10
