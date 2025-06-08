@@ -44,7 +44,7 @@ jobs:
         uses: SonarSource/sonarcloud-github-action@v2
         with:
             projectBaseDir: .
-            projectKey: Alejo311548_spring-app
+            projectKey: Alejo311548_CitaSALUD_Laboratorio_2
             organization: alejo311548
         env:
             SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
