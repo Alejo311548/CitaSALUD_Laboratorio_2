@@ -65,6 +65,17 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
+      - name: List files before upload (debug)
+        run: |
+          echo "List root files:"
+          ls -la
+          echo "List target folder:"
+          ls -la target
+          echo "List .mvn folder:"
+          ls -la .mvn
+          echo "List src folder:"
+          ls -la src
+
       - name: Upload app files to EC2
         uses: appleboy/scp-action@v0.1.4
         with:
@@ -72,12 +83,12 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_KEY }}
           source: |
-            target/*.jar
             Dockerfile
             mvnw
-            .mvn/**
-            src/**
             pom.xml
+            target/CITASalud_Backend.jar
+            .mvn/
+            src/
           target: "/home/ubuntu/app"
 
       - name: SSH into EC2 and deploy Docker container
@@ -92,4 +103,3 @@ jobs:
             docker rm myapp || true
             docker build -t myapp .
             docker run -d -p 8080:8080 --name myapp myapp
-  
