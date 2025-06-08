@@ -46,5 +46,44 @@ jobs:
           projectBaseDir: .
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_PROJECT_KEY: your-org_your-project
-          SONAR_ORGANIZATION: your-org
+          SONAR_PROJECT_KEY: Alejo311548_spring-app
+          SONAR_ORGANIZATION: alejo311548
+
+      - name: Snyk Security Scan
+        uses: snyk/actions/maven@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+           args: test
+
+
+    deploy:
+      runs-on: ubuntu-latest
+      needs: build
+      steps:
+        - name: Checkout repo
+          uses: actions/checkout@v3
+
+        - name: Upload JAR to EC2
+          uses: appleboy/scp-action@v0.1.4
+          with:
+            host: ${{ secrets.EC2_HOST }}
+            username: ${{ secrets.EC2_USER }}
+            key: ${{ secrets.EC2_KEY }}
+            source: "target/*.jar"
+            target: "/home/ubuntu/app"
+
+        - name: SSH into EC2 and deploy Docker container
+          uses: appleboy/ssh-action@v0.1.10
+          with:
+            host: ${{ secrets.EC2_HOST }}
+            username: ${{ secrets.EC2_USER }}
+            key: ${{ secrets.EC2_KEY }}
+            script: |
+              cd /home/ubuntu/app
+              docker stop myapp || true
+              docker rm myapp || true
+              docker build -t myapp .
+              docker run -d -p 8080:8080 --name myapp myapp
+
+
