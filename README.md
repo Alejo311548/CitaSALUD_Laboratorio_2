@@ -1,0 +1,53 @@
+# Proyecto Backend de Gestión de Especialidades y Sedes
+
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Alejo311548_CitaSALUD_Laboratorio_2&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=Alejo311548_CitaSALUD_Laboratorio_2)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=Alejo311548_CitaSALUD_Laboratorio_2&metric=bugs)](https://sonarcloud.io/summary/new_code?id=Alejo311548_CitaSALUD_Laboratorio_2)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=Alejo311548_CitaSALUD_Laboratorio_2&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=Alejo311548_CitaSALUD_Laboratorio_2)
+[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=Alejo311548_CitaSALUD_Laboratorio_2&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=Alejo311548_CitaSALUD_Laboratorio_2)
+
+### Arquitectura de Software  
+**Estudiante:** Alejandro Vargas Ocamoo  
+**Asignatura:** Arquitectura de Software  
+
+---
+
+## Descripción
+
+Este proyecto es un backend desarrollado en Java con Spring Boot que expone una API REST para la gestión de especialidades, sedes y autenticación de usuarios. La API está desplegada en una instancia EC2 de AWS y disponible públicamente para consumo.
+
+---
+
+## Endpoints disponibles
+
+| Método | Endpoint                             | Descripción                     |
+|--------|------------------------------------|--------------------------------|
+| GET    | `http://3.134.90.30:8080/api/especialidades` | Obtiene la lista de especialidades disponibles |
+| GET    | `http://3.134.90.30:8080/api/sedes`          | Obtiene la lista de sedes registradas          |
+| POST   | `http://3.134.90.30:8080/api/auth/login`     | Autenticación de usuario (login)                |
+| POST   | `http://3.134.90.30:8080/api/auth/register`  | Registro de nuevos usuarios                      |
+
+---
+
+## Cómo consumir la API
+
+No es necesario clonar el repositorio ni ejecutar nada localmente para probar la API. Simplemente realiza peticiones HTTP a los endpoints disponibles.
+
+### Cuándo y cómo probar cada endpoint
+
+- **GET `/api/especialidades`**  
+  Envía una petición GET para obtener la lista de especialidades.  
+  Disponible siempre que la API esté activa.
+
+- **GET `/api/sedes`**  
+  Envía una petición GET para obtener la lista de sedes.  
+  Disponible siempre que la API esté activa.
+
+- **POST `/api/auth/register`**  
+  Envía una petición POST con un cuerpo JSON para registrar un nuevo usuario.  
+  Ejemplo de cuerpo JSON:
+
+  ```json
+  {
+    "username": "nuevoUsuario",
+    "password": "contraseñaSegura"
+  }
