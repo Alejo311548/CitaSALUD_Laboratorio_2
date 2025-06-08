@@ -46,7 +46,7 @@ jobs:
           name: jar-file
           path: target/*.jar
 
-      # Opcional: puedes subir otros archivos que necesites para deploy (Dockerfile, scripts)
+
       - name: Upload Dockerfile and scripts artifact
         uses: actions/upload-artifact@v4
         with:
@@ -85,6 +85,14 @@ jobs:
           ls -la target
           echo "List deploy-files folder:"
           ls -la deploy-files
+
+      - name: List files before upload
+        run: |
+           echo "Root directory:"
+           ls -la
+           echo "target directory:"
+           ls -la target || echo "target folder not found"
+
 
       - name: Upload app files to EC2
         uses: appleboy/scp-action@v0.1.4
