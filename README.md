@@ -48,6 +48,19 @@ No es necesario clonar el repositorio ni ejecutar nada localmente para probar la
 
   ```json
   {
-    "username": "nuevoUsuario",
-    "password": "contraseñaSegura"
-  }
+  "nombre": "Pepe Perez",
+  "email": "Pepe@example.com",
+  "telefono": "3214567890",
+  "password": "12345678"
+}
+
+- **POST `/api/auth/login`**  
+  Envía una petición POST con un cuerpo JSON con un usuario registrado.  
+  Ejemplo de cuerpo JSON:
+
+  ```json
+  {
+  
+  "email": "Pepe@example.com",
+  "password": "12345678"
+}
